@@ -6,6 +6,7 @@ import Home from "./Home";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Rentals from './Rentals';
+import Property from './Property';
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
           <div className="content">
             <Routes>
               <Route path="/" element={<Home />} />
+            </Routes>
+            <Routes>
+              <Route path="/property" element={<Property />} />
             </Routes>
             <Routes>
               <Route path="/contact" element={<Contact />} />

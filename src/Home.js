@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Hero from './components/Hero'
 import Information from './components/Information.js'
 import SliderReview from './components/SliderReview'
+import { getData } from './components/data';
+
+
 
 function Home() {
+
+
   return (
     <div>
         <Hero />
