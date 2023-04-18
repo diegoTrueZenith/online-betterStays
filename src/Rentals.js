@@ -61,11 +61,6 @@ function Rentals() {
           </div>
         );
       })} 
-
-
-      {/* <div id="booking" style={{display: showBooking ? "block" : "none"}}>
-          <Booking id={selectedID} changeVisibility={()=>setShowBooking(!showBooking)} properties={myListings}/>
-      </div> */}
     </div>
   )
 }
