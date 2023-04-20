@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import Booking from './Booking';
 
 function Form(props) {
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [showBtnContinue, setShowBtnContinue] = useState(false)
+
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -9,13 +14,16 @@ function Form(props) {
   // VALIDATING FORM
   function checkName(event) {
     setName(event.target.value);
+    checkForm()
   }
   function checkLastName(event) {
     setLastName(event.target.value);
+    checkForm()
   }
   function checkPhone(event) {
     if (event.target.value.length == 10) {
       setPhone(event.target.value);
+      checkForm()
     } else {
       setPhone("");
     }
@@ -24,6 +32,7 @@ function Form(props) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (regex.test(event.target.value)) {
       setEmail(event.target.value);
+      checkForm()
     } else {
       setEmail("");
     }
@@ -38,6 +47,18 @@ function Form(props) {
         return new Date(date).toLocaleDateString(undefined, options);
     }
   }
+
+  function checkForm(){
+    if(!name == "" && !lastName == "" && !email == "" && !phone == "" && !props.checkIn == "" && !props.checkOut == "" ) {
+      setShowBtnContinue(true);
+    }
+  }
+
+  useEffect(()=>{
+    checkForm();
+  }, [props.checkIn, props.checkOut])
+
+
   
   return (
     <div>
@@ -56,6 +77,23 @@ function Form(props) {
             <p><b> Phone:     </b> {phone} </p>
             <p><b> Email:     </b> {email} </p>
         </div>
+        <div style={{display: showBtnContinue ? "block" : "none"}}>
+          <button className="btnForm" onClick={()=>setShowPopup(true)}> Continue </button>
+        </div>
+        <div className="popup-booking" style={{display : showPopup ? "grid" : "none"}}>
+            <Booking 
+              propertyName={props.propertyName} 
+              propertyPicture={props.propertyPicture} 
+              name={name} 
+              lastName={lastName} 
+              email={email} 
+              phone={phone} 
+              checkIn={props.checkIn} 
+              checkOut={props.checkOut} 
+              balance={props.balance}
+              closePopUp={()=>setShowPopup(false)}
+            />
+          </div>
     </div>
   )
 }

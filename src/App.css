@@ -488,6 +488,8 @@ a {
   display: grid;
   grid-template-columns: 70% auto;
   padding: 20px;
+  max-width: 1600px;
+  margin: auto;
   /* height: 100vh; */
 }
 
@@ -812,3 +814,158 @@ a {
   background-color: #e6e6e6;
 }
 
+
+/* ==========  MAP ========== */
+
+.wrapper-map {
+  position: sticky;
+}
+
+/* ==========  LOADER ========== */
+.wrapper-loader {
+  position: fixed;
+  top: 100px; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  animation: wrapper-loader 2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+}
+.calendarIcon {
+  font-size: 220px;
+  color: lightgray;
+}
+
+.bouncingCalendar {
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+
+.wrapper-loader h2 {
+  font-size: 30px;
+  font-weight: 400;
+  color: lightgrey;
+}
+
+@keyframes wrapper-loader {
+  from {
+    display: block;
+  } 
+  to {
+    display: none;
+  }
+}
+
+.loading-bar {
+  display: block;
+  margin: auto;
+  width: 50%;
+  height: 15px;
+  background-color: #eee;
+  border-radius: 20px;
+}
+
+.loading-bar-progress {
+  height: 100%;
+  border-radius: 20px;
+  background-color: #0089BF;
+  animation: loading-bar-animation 2s linear forwards;
+}
+
+@keyframes loading-bar-animation {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+
+
+
+/* POPUP BOOKING */
+
+.popup-booking {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50% ,-50%);
+  width: 100vw;
+  height: 100vh;
+  background-color:  rgba(0,0,0,0.5);
+  padding: 20px;
+  
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper-confirmation {
+  display: grid;
+  grid-template-columns: 500px auto;
+  width: 1500px;
+  height: 800px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.wrapper-confirmation #left {
+  padding: 20px;
+}
+.wrapper-confirmation #right {
+  padding: 20px;
+}
+
+.wrapper-confirmation h1 {
+  font-size: 40px;
+  color: #0089BF;
+  font-weight: bold;
+}
+
+.wrapper-confirmation .legend {
+  color: gray;
+}
+.wrapper-confirmation hr{
+  margin: 20px 0;
+}
+.wrapper-confirmation img {
+  width: 100%;
+  height: 250px;
+}
+.wrapper-confirmation .icon-confirmation {
+  box-sizing: border-box;
+  background-color: #1087ff;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 20px;
+  margin-right: 10px;
+  height: 100%;
+}
+
+.wrapper-confirmation .detail {
+  display: grid;
+  grid-template-columns: 30px auto;
+  align-items: center;
+  height: 30px;
+  margin-bottom: 40px;
+}
+
+.detail .title{
+  font-size: 15px !important;
+  color: red;
+  margin-bottom: 0;
+}
+.detail .value{
+  margin-top: 0 !important;
+  color: green;
+}

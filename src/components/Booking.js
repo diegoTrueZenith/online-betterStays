@@ -1,88 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import Calendar from "react-calendar";
-import { FaDoorOpen, FaToilet } from "react-icons/fa";
-// import { getData } from '../components/data';
-import Form from './Form.js';
+import React, { useState, useEffect, useRef } from 'react'
 
 function Booking(props) {
 
-  const [selectedID, setSelectedID] = useState(props.id);
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [searchDate, setSearchDate] = useState();
-  const [imgToShow, setImgToShow] = useState(0);
-
-  // const [myListings, setMyListings] = useState([])
-
-
-
-  let property = props.properties[selectedID];
-    
-  let amenitiesMap = [];
-  let picturesMap = [];
-
-  // MAPING AMENITIES
-  // for (const [key, value] of Object.entries(property.amenities)) {
-  //   amenitiesMap.push(<div className='amenities'>{value}</div>)
-  // }
-  // MAPING PICTURES
-  // for (const [key, value] of Object.entries(property.pictures)) {
-  //   picturesMap.push(<img onMouseOver={()=>setImgToShow(key)} src={property.pictures[key].original} />)
-  // }
-
-  //  WHEN DATES ARE SELECTED
-  const onDateSelected = (range) => {
-    const formatDate = (range) => {
-      const year = range.getFullYear();
-      const month = String(range.getMonth() + 1).padStart(2, '0');
-      const day = String(range.getDate()).padStart(2, '0');
-      return `${year}/${month}/${day}`;
+  const [paymentApproved, setPaymentApproved] = useState(false);
+  
+  //HANDLES CLICK OUT OF DIV
+  const ref = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        props.closePopUp();
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-    setCheckIn(formatDate(range[0]));
-    setCheckOut(formatDate(range[1]));
-  };
+  }, [ref]);
 
-  useEffect(()=>{
-      setSelectedID(props.id);
-      // console.log(props.properties);
-  })
+  
+
 
   return (
-    // <div className='wrapper-booking'>
-    //     <button className='btnClose' onClick={()=>props.changeVisibility()}> <i className="bi bi-x-lg"></i> </button>
-    //     <div id="left">
-    //         <h3> Book Now </h3>
-    //         <Calendar
-    //             onActiveStartDateChange={(e) => setSearchDate(e.activeStartDate)}
-    //             className="calendar"
-    //             minDate={new Date()}
-    //             selectRange={true}
-    //             onChange={onDateSelected}
-    //         ></Calendar>
-    //         <Form  checkIn={checkIn} checkOut={checkOut}/>
-    //         <button className='btnForm'> Continue </button>
-    //     </div>
-    //     <div id="right">
-    //         <img src={property.pictures[imgToShow].original} />
-    //         <div className='galery'>
-    //             {picturesMap}
-    //         </div>
-    //         <h3> {property.nickname}</h3>
-    //         <p className="address"> <i className="bi bi-geo-alt"></i> {property.address.city}, {property.address.state} </p>
-    //         <p> {property.publicDescription.summary} </p>
-    //         <div className="capacities">
-    //             <p> <FaDoorOpen className="icon"/> {property.bedrooms} bedrooms  </p>
-    //             <p> <FaToilet className="icon"/> {property.bathrooms} bathrooms </p>
-    //         </div>
-    //         <iframe src={'http://tecnodael.com/MapsAPI/?from='+property.address.lat+','+property.address.lng} />
-    //         <h2> Amenities Included: </h2>
-    //         <div className='allAmenities'>
-    //             {amenitiesMap}
-    //         </div>
-    //     </div>
-    // </div>
-
-    <div></div>
+    <div ref={ref}>
+    <div className='wrapper-confirmation'>
+        <div id="left">
+          <img src={props.propertyPicture} />
+          <hr></hr>
+          <h1> {props.propertyName} </h1>
+          <p> <i className="icon-confirmation bi bi-calendar4-week"></i><b> Check-In:     </b>{props.checkIn} </p>
+          <p> <i className="icon-confirmation bi bi-calendar4-week"></i><b> Check Out:    </b>{props.checkOut} </p>
+          <p> <i className="icon-confirmation bi bi-person"></i><b> Full Name:    </b>{props.name} {props.lastName}</p>
+          <p> <i className="icon-confirmation bi bi-envelope"></i><b> Email:        </b>{props.email} </p>
+          <p> <i className="icon-confirmation bi bi-telephone"></i><b> Phone: </b>{props.phone} </p>
+        </div>
+        <div id="right">
+          <h1> Check Out </h1>
+          <p> Balance $ {props.balance}USD</p>
+          <p> Payment Approved:  {paymentApproved ? "True" : "False"}</p>
+          <button onClick={()=> setPaymentApproved(!paymentApproved)}> Pay Now</button>
+        </div>
+    </div>
+    </div>
   )
 }
 

@@ -5,77 +5,137 @@ import { FaDoorOpen, FaToilet ,FaUsers} from "react-icons/fa";
 import Calendar from "react-calendar";
 import Form from "./components/Form.js";
 import Map from "./components/Map";
+import Loader from "./components/Loader";
 
 
 function Property(props) {
-  const [selectedID, setSelectedID] = useState();
-  const [myListings, setMyListings] = useState([]);
+  const [selectedID, setSelectedID] = useState(null);
   const [property, setProperty] = useState();
-
+  const [propertyID, setPropertyID] = useState();
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [searchDate, setSearchDate] = useState();
   const [imgToShow, setImgToShow] = useState(0);
-
   const [amenities, setAmenities] = useState(null);
   const [pictures, setPictures] = useState(null);
   const [unavailableDates, setUnavailableDates] = useState(null);
+  const [showCalendar, setShowCalendar] = useState(false);
 
-  const [propertyID, setPropertyID] = useState(null);
 
-  let amenitiesMap = [];
-  let picturesMap = [];
+  const [propertyName, setPropertyName] = useState("")
+  const [name, setName] = useState("")
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [scroll, setScroll] = useState(true);
+
+  const [balance, setBalance] = useState(0);
 
 
   useEffect(()=>{
-    const searchParams = new URLSearchParams(window.location.search);
-    setSelectedID(searchParams.get("id"));  
-  },[])
+      const searchParams = new URLSearchParams(window.location.search);
+      setSelectedID(searchParams.get("id"));  
+      if(selectedID == null){
+        console.log("Reading ID ...");
+      } else {
+        console.log("Fetching Data Property: " + selectedID);
+        fetchData();
+      }
+  },[selectedID])
 
-
-  useEffect(() => {
-    if(!propertyID){
-      setPropertyID(null);
-    getData().then((result) => {
-      console.log(' ======= GETTING DATA =======');
-      console.log(result.data.results[selectedID]);
-      setProperty(result.data.results[selectedID]);
+  let data;
+  async function fetchData() {
+    try {
+      const response = await fetch('http://localhost:3000/api/guestyProperties');
+      data = await response.json();
+      let property = data.data.results[selectedID]
+      setProperty(data.data.results[selectedID]);
       setPictures(property.pictures);
       setAmenities(property.amenities);
       setPropertyID(property._id);
-    }); 
-    } else {
-      getCalendar(propertyID).then((result) => {
-        console.log("======== HERE IS THE CALENDAR FROM: " + propertyID);
-        console.log(result);
-        setUnavailableDates(result.data.data.days)
+      fetchCalendar(property._id);
+    } catch (error) {
+      console.error(error);
+    } 
+  }
+  let calendar;
+  async function fetchCalendar(id) {
+    try {
+      const response = await fetch('http://localhost:3000/api/guestyCalendar',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          propertyID: id,
+        })
       });
-    }
-  });
+      calendar = await response.json();
 
- 
+      // console.log("HERE ARE THE DATES: " + id);
+      // console.log(calendar.data.data.days);
+      let fetchedID = calendar.data.data.days[0].listingId
+      if(id == fetchedID){
+        setUnavailableDates(calendar.data.data.days)
+        setShowCalendar(true);
+      } else {
+        setTimeout(() => {
+          fetchCalendar(id);
+        }, 1000);
+      }
+
+    } catch (error) {
+      console.error(error);
+    } 
+  }
+
+  async function fetchBalance(id) {
+    let dates;
+    try {
+      const response = await fetch('http://localhost:3000/api/guestyCalendar',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          propertyID: id,
+        })
+      });
+      dates = await response.json();
+      let totBalance = 0;
+      dates.data.data.days.forEach((date) => {
+        if(selectedDates.includes(date.date)){
+          totBalance = totBalance + date.price
+        }
+      })
+      setBalance(totBalance);
+    } catch (error) {
+      console.error(error);
+    } 
+  }
+
 
 
 
   // STORING -> MAPPING AMENITIES
+  let amenitiesMap = [];
   if(!amenities){
-    return <div>Loading...</div>;
+    return ;
   } else {  
     for (const [key, value] of Object.entries(amenities)) {
       amenitiesMap.push(<div className="amenities">{value}</div>);
     }
   }
   // STORING -> MAPPING PICTURES
+  let picturesMap = [];
   if(!pictures){
-    return <div>Loading...</div>;
+    return ;
   } else {
     for (const [key, value] of Object.entries(pictures)) {
-      // picturesMap.push( <img onMouseOver={() => setImgToShow(key)} src={pictures[key].original}/>);
-      picturesMap.push( <img src={pictures[key].original}/>);
+      picturesMap.push( <img onMouseOver={() => setImgToShow(key)} src={pictures[key].original}/>);
     }
   }
-
-
 
   let disabledDates = [];
   //  WHEN DATES ARE SELECTED
@@ -88,6 +148,8 @@ function Property(props) {
     };
     setCheckIn(formatDate(range[0]));
     setCheckOut(formatDate(range[1]));
+    getBalance(formatDate(range[0]), formatDate(range[1]));
+
   };
   function isDateDisabled(date) {
     return disabledDates.some(disabledDate => 
@@ -96,27 +158,53 @@ function Property(props) {
       disabledDate.getFullYear() === date.getFullYear()
     );
   }
-  // STORING -> UNAVAILABLE DATES
+
+
+
+  let selectedDates = [];
+  function getBalance(start, end){
+    const dates = [];
+    let currentDate = new Date(start);
+    let endDate = new Date(end);
+  
+    //GETTING DATES BETWEEN START AND END
+    while (currentDate <= endDate) {
+      dates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    //PUSHING EACH DAY INTO THE ARRAY
+    dates.forEach((date) => {
+      selectedDates.push(date.toLocaleDateString('en-CA', {year: 'numeric', month: '2-digit', day: '2-digit'}));
+    });
+    
+    // CALLING THE FUNCTION TO GET TOTAL BALANCE
+    fetchBalance(propertyID);
+  }
+
+
+
+
+  //STORING -> UNAVAILABLE DATES
   if(!unavailableDates){
-    return <div>Loading...</div>;
+    return <Loader/>
   } else {
+    // console.log("storing unavailable dates");
     for (const [key, value] of Object.entries(unavailableDates)) {
-      if(unavailableDates[key].status == "unavailable"){
-        unavailbleDates(unavailableDates[key].date);
+      if(unavailableDates[key].status == "unavailable" || unavailableDates[key].status == "booked"){
+        let unavailbleDay = unavailableDates[key].date
+        let date = unavailbleDay.split("-");
+        disabledDates.push(new Date(date[0], parseInt(date[1]) - 1, date[2]));
       }
     }
   }
-  //STORING UNAVAILABLE DATES
-  function unavailbleDates(unavailbleDay) {
-    let date = unavailbleDay.split("-");
-    disabledDates.push(new Date(date[0], parseInt(date[1]) - 1, date[2]));
-  }
+
 
 
   return (
-    <div>
+    <div style={{overflowY:"hidden"}}>
       {property ? (
-        <div className="wrapper-booking">
+        <div className="wrapper-booking" >
           <div id="left">
             <div className="pictures">
                 <img src={property.pictures[imgToShow].original} />
@@ -143,6 +231,10 @@ function Property(props) {
           </div>
           <div id="right">
             <h3> Book Now </h3>
+            <div className="calendar-loader" style={{display: showCalendar? "none" : "block"}}>
+              <p> Loading ... </p>
+            </div>
+            <div style={{display: showCalendar? "block" : "none"}}>
             <Calendar
                  onActiveStartDateChange={(e) => setSearchDate(e.activeStartDate)}
                  className="calendar"
@@ -155,15 +247,21 @@ function Property(props) {
                 isDateDisabled(date) // Call isDateDisabled function to check if date should be disabled
               }
              ></Calendar>
-            <Form checkIn={checkIn} checkOut={checkOut} />
-            <button className="btnForm"> Continue </button>
+             </div>
+            <Form 
+              checkIn={checkIn} 
+              checkOut={checkOut} 
+              balance={balance}
+              propertyName={property.nickname} 
+              propertyPicture={property.pictures[0].original} 
+              showPopUp={()=>setScroll(false)}
+              />
+          </div>
         </div>
-    </div>
       ) : (
-        <p>Loading...</p>
+        <div> Loading Data ... </div>
       )}
     </div>
   );
 }
-
 export default Property;
