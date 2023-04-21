@@ -43,6 +43,16 @@ function Property(props) {
       }
   },[selectedID])
 
+
+  //FUNCTION TO FORMAT DATE YYYY-MM-DD
+  const formatDate = (range) => {
+    const year = range.getFullYear();
+    const month = String(range.getMonth() + 1).padStart(2, '0');
+    const day = String(range.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+  };
+
+
   // CALLING THE API TO FETCH THE PROPERTY DATA
   let selectedProperty;
   async function fetchData() {
@@ -142,16 +152,22 @@ function Property(props) {
   //  WHEN DATES ARE SELECTED
   let disabledDates = [];
   const onDateSelected = (range) => {
-    const formatDate = (range) => {
-      const year = range.getFullYear();
-      const month = String(range.getMonth() + 1).padStart(2, '0');
-      const day = String(range.getDate()).padStart(2, '0');
-      return `${year}/${month}/${day}`;
-    };
     setCheckIn(formatDate(range[0]));
     setCheckOut(formatDate(range[1]));
-    getBalance(formatDate(range[0]), formatDate(range[1]));
-
+    balancingDates(range[0], range[1]);
+    function balancingDates(start, end){
+      const currentStart = new Date(start);
+      const newStart = new Date();
+      newStart.setDate(currentStart.getDate() + 1);
+      // console.log(newStart);
+    
+      const currentEnd = new Date(end);
+      const newEnd = new Date();
+      newEnd.setDate(currentEnd.getDate() + 1);
+      // console.log(newEnd);
+    
+      getBalance(formatDate(newStart), formatDate(newEnd));
+    }
   };
   function isDateDisabled(date) {
     return disabledDates.some(disabledDate => 
@@ -164,6 +180,8 @@ function Property(props) {
   //GETTING FINAL BALANCE OF THE SELECTED DATES
   let selectedDates = [];
   function getBalance(start, end){
+    console.log("Start: " + start);
+    console.log("End: " + end);
     const dates = [];
     let currentDate = new Date(start);
     let endDate = new Date(end);

@@ -136,6 +136,19 @@ h3 {
   color: white;
 }
 
+.carousel {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-X: scroll;
+  flex-direction: rows;
+}
+.carousel .property .name-price{
+  
+
+}
+
 
 /* INFORMATION */
 
@@ -355,6 +368,7 @@ a {
   padding: 15px;
   
   margin: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 .property:hover{
   background-color: rgb(234, 234, 234);
@@ -385,6 +399,7 @@ a {
   background-color: white;
   border-radius: 5px;
   padding: 3px 8px;
+  width: fit-content;
 }
 .property .price:hover {
   background-color: #0089BF;
@@ -955,6 +970,12 @@ abbr[title] {
 .wrapper-confirmation img {
   width: 100%;
   height: 255px;
+  transition: transform 0.3s ease-in-out;
+  object-fit: cover;
+}
+
+img:hover {
+  transform: scale(1.02);
 }
 
 .reservation-details {
@@ -995,8 +1016,12 @@ abbr[title] {
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
+
 .wrapper-confirmation .detail:hover {
-  box-shadow: #0089bf47 0px 4px 12px;
+  background-color: #0089BF;
+}
+.wrapper-confirmation .detail:hover *{
+  color:  white !important;
 }
 
 .wrapper-confirmation .detail h3 {
