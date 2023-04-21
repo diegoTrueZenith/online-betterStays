@@ -590,18 +590,19 @@ a {
   background-color: #0089BF;
   color: white;
   font-size: 20px;
+  margin-top: 20px;
 }
 
 .bookingConfirmation {
   border-radius: 10px;
   background-color: #0089bfa3;
-  padding: 15px;
+  padding: 5px 15px 20px 15px;
   color: white;
   text-align: left;
   margin: 20px 0;
 }
 .bookingConfirmation h2 {
-  margin-top: 0;
+  margin-top: -10px;
   margin-bottom: 10px;
   font-size: 20px;
   font-weight: 600;
@@ -680,13 +681,16 @@ a {
 .react-calendar {
   width: 100%;
   margin: auto;
+  margin-top: 20px;
   margin-bottom: 40px;
   max-width: 100%;
   background: white;
-  border: 1px solid #a0a096;
-  font-family: Arial, Helvetica, sans-serif;
+  /* border: 1px solid #a0a096; */
+  /* font-family: Arial, Helvetica, sans-serif; */
   line-height: 1.125em;
-
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 20px;
+  padding: 20px;
 }
 .react-calendar--doubleView {
   width: 700px;
@@ -719,11 +723,13 @@ a {
   width: 100%;
   display: grid;
   grid-template-columns: auto auto auto auto auto;
-  background-color: #2c3e50;
+  /* background-color: #2c3e50; */
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
 }
 .react-calendar__navigation button {
   background-color: transparent;
-  color: white !important;
+  color: gray !important;
   height: 100%;
   font-size: 20px;
   border: none;
@@ -734,15 +740,19 @@ a {
   
 }
 .react-calendar__navigation button[disabled] {
-  background-color: #2c3e50;
+  /* background-color: #2c3e50; */
 }
 .react-calendar__month-view__weekdays {
   text-align: center;
-  text-transform: uppercase;
-  font-weight: bold;
+  /* text-transform: uppercase; */
+  font-weight: 400;
   font-size: 20px;
-  background-color: #0089BF;
-  color: white;
+  /* background-color: #0089BF; */
+  color: gray;
+}
+
+abbr[title] {
+  text-decoration: none;
 }
 .react-calendar__month-view__weekdays__weekday {
   padding: 0.5em;
@@ -769,12 +779,14 @@ a {
   padding: 2em 0.5em;
 }
 .react-calendar__tile {
-  max-width: 100%;
+  max-width: 51px;
   text-align: center;
-  padding: 0.75em 0.5em;
+  padding: 15px 3px;
   background: none;
-  border: 1px solid white;
+  border: 2px solid white;
   font-size: 20px;
+  border-radius: 10px;
+  margin: 2px !important;
 }
 .react-calendar__tile:disabled {
   text-decoration:line-through;
@@ -787,7 +799,7 @@ a {
   background-color: #e6e6e6;
 }
 .react-calendar__tile--now {
-  background: #ffff76;
+  background: #ffff76 !important;
 }
 .react-calendar__tile--now:enabled:hover,
 .react-calendar__tile--now:enabled:focus {
@@ -801,14 +813,16 @@ a {
   background: #a9d4ff;
 }
 .react-calendar__tile--active {
-  background: #2c3e50;
-  color: white;
+  /* background: #2c3e50; */
+  color: #0089BF;
+  border: 1px solid #0089BF;
 }
 
 
 .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
   background: #1087ff;
+  color: white;
 }
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;
@@ -909,8 +923,7 @@ a {
 }
 
 .wrapper-confirmation {
-  display: grid;
-  grid-template-columns: 500px auto;
+  /* display: grid; */
   width: 1500px;
   height: 800px;
   background-color: white;
@@ -920,6 +933,8 @@ a {
 
 .wrapper-confirmation #left {
   padding: 20px;
+  background-color: #072A40;
+  border-radius: 15px;
 }
 .wrapper-confirmation #right {
   padding: 20px;
@@ -939,33 +954,109 @@ a {
 }
 .wrapper-confirmation img {
   width: 100%;
-  height: 250px;
+  height: 255px;
 }
+
+.reservation-details {
+  display: grid;
+  grid-template-columns: 400px auto;
+}
+.reservation-details h1 {
+  margin-left: 20px;
+  margin-bottom: 0px;
+}
+.reservation-details h2 {
+ margin-left: 20px;
+ margin-top: 0px !important;
+ margin-bottom: 15px !important;
+ color: gray;
+}
+#details {
+  display: flex;
+  margin-left: 20px;
+}
+
+
 .wrapper-confirmation .icon-confirmation {
-  box-sizing: border-box;
-  background-color: #1087ff;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 5px;
-  font-size: 20px;
-  margin-right: 10px;
-  height: 100%;
+  color: #0089BF;
+  font-size: 40px;
 }
 
 .wrapper-confirmation .detail {
-  display: grid;
-  grid-template-columns: 30px auto;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  margin-right: 10px;
+  text-align: center;
+  height: 150px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 30px;
-  margin-bottom: 40px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+.wrapper-confirmation .detail:hover {
+  box-shadow: #0089bf47 0px 4px 12px;
 }
 
-.detail .title{
-  font-size: 15px !important;
-  color: red;
-  margin-bottom: 0;
+.wrapper-confirmation .detail h3 {
+  font-size: 20px !important;
+  text-align: center !important;
+  font-weight: 400;
+  margin-top: 0px !important;
+  color: #0089BF !important;
 }
-.detail .value{
-  margin-top: 0 !important;
-  color: green;
+.wrapper-confirmation .detail p {
+  color: gray;
+  font-size: 20px;
+  margin-top: 0px !important;
+  margin-bottom: 5px;
+  text-align: center !important;
+}
+
+.wrapper-confirmation .checkOut {
+  margin: 20px;
+}
+
+
+.checksTime {
+  color: gray !important;
+  margin-top: 10px !important;
+  font-size: 15px !important;
+}
+
+
+.summary {
+  /* border: 1px solid lightgray; */
+  padding: 0 10px;
+  overflow-y: scroll;
+  height: 380px;
+}
+#summaryTitle{
+  font-size: 25px !important;
+  padding: 10px 0;
+  margin: 0 10px !important;
+}
+.summary-row {
+  display: grid;
+  padding: 5px 5px;
+  grid-template-columns: auto 100px; 
+  border-bottom: 1px solid lightgray;
+  color: gray;
+}
+.summary-row:hover {
+  border-radius: 5px;
+  border-bottom: none;
+  background-color: #0089BF;
+  color: white;
+}
+.summary-row p {
+  font-size: 20px;
+}
+.totals {
+  width: 200px;
+  display: flex;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: 20px;
 }

@@ -21,7 +21,6 @@ function Property(props) {
   const [unavailableDates, setUnavailableDates] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
 
-
   const [propertyName, setPropertyName] = useState("")
   const [name, setName] = useState("")
   const [lastName, setLastName] = useState("");
@@ -29,8 +28,8 @@ function Property(props) {
   const [email, setEmail] = useState("");
 
   const [scroll, setScroll] = useState(true);
-
   const [balance, setBalance] = useState(0);
+  const [balances, setBalances] = useState([]);
 
 
   useEffect(()=>{
@@ -39,18 +38,20 @@ function Property(props) {
       if(selectedID == null){
         console.log("Reading ID ...");
       } else {
-        console.log("Fetching Data Property: " + selectedID);
+        // console.log("Fetching Data Property: " + selectedID);
         fetchData();
       }
   },[selectedID])
 
-  let data;
+  // CALLING THE API TO FETCH THE PROPERTY DATA
+  let selectedProperty;
   async function fetchData() {
     try {
-      const response = await fetch('http://localhost:3000/api/guestyProperties');
-      data = await response.json();
-      let property = data.data.results[selectedID]
-      setProperty(data.data.results[selectedID]);
+      await fetch('http://localhost:3000/api/guestyProperties')
+      .then(response => response.json())
+      .then(data => selectedProperty = data);
+      let property = selectedProperty.data.results[selectedID]
+      setProperty(selectedProperty.data.results[selectedID]);
       setPictures(property.pictures);
       setAmenities(property.amenities);
       setPropertyID(property._id);
@@ -59,6 +60,8 @@ function Property(props) {
       console.error(error);
     } 
   }
+
+  // CALLING THE API TO FETCH THE DATES
   let calendar;
   async function fetchCalendar(id) {
     try {
@@ -72,9 +75,6 @@ function Property(props) {
         })
       });
       calendar = await response.json();
-
-      // console.log("HERE ARE THE DATES: " + id);
-      // console.log(calendar.data.data.days);
       let fetchedID = calendar.data.data.days[0].listingId
       if(id == fetchedID){
         setUnavailableDates(calendar.data.data.days)
@@ -90,8 +90,10 @@ function Property(props) {
     } 
   }
 
+  // CALLING API TO FETCH THE BALANCES
   async function fetchBalance(id) {
     let dates;
+    let balances = [];
     try {
       const response = await fetch('http://localhost:3000/api/guestyCalendar',{
         method: 'POST',
@@ -107,16 +109,16 @@ function Property(props) {
       dates.data.data.days.forEach((date) => {
         if(selectedDates.includes(date.date)){
           totBalance = totBalance + date.price
+          balances.push({ date: date.date, price: date.price});
         }
       })
+      // console.log(balances);
+      setBalances(balances)
       setBalance(totBalance);
     } catch (error) {
       console.error(error);
     } 
   }
-
-
-
 
   // STORING -> MAPPING AMENITIES
   let amenitiesMap = [];
@@ -124,7 +126,7 @@ function Property(props) {
     return ;
   } else {  
     for (const [key, value] of Object.entries(amenities)) {
-      amenitiesMap.push(<div className="amenities">{value}</div>);
+      amenitiesMap.push(<div className="amenities" key={key}>{value}</div>);
     }
   }
   // STORING -> MAPPING PICTURES
@@ -133,12 +135,12 @@ function Property(props) {
     return ;
   } else {
     for (const [key, value] of Object.entries(pictures)) {
-      picturesMap.push( <img onMouseOver={() => setImgToShow(key)} src={pictures[key].original}/>);
+      picturesMap.push(<img  key={key} onMouseOver={() => setImgToShow(key)} src={pictures[key].original}/>);
     }
   }
 
-  let disabledDates = [];
   //  WHEN DATES ARE SELECTED
+  let disabledDates = [];
   const onDateSelected = (range) => {
     const formatDate = (range) => {
       const year = range.getFullYear();
@@ -159,8 +161,7 @@ function Property(props) {
     );
   }
 
-
-
+  //GETTING FINAL BALANCE OF THE SELECTED DATES
   let selectedDates = [];
   function getBalance(start, end){
     const dates = [];
@@ -182,9 +183,6 @@ function Property(props) {
     fetchBalance(propertyID);
   }
 
-
-
-
   //STORING -> UNAVAILABLE DATES
   if(!unavailableDates){
     return <Loader/>
@@ -198,8 +196,6 @@ function Property(props) {
       }
     }
   }
-
-
 
   return (
     <div style={{overflowY:"hidden"}}>
@@ -237,6 +233,7 @@ function Property(props) {
             <div style={{display: showCalendar? "block" : "none"}}>
             <Calendar
                  onActiveStartDateChange={(e) => setSearchDate(e.activeStartDate)}
+                //  onViewChange={nextMonth()}
                  className="calendar"
                  minDate={new Date()}
                  selectRange={true}
@@ -251,11 +248,15 @@ function Property(props) {
             <Form 
               checkIn={checkIn} 
               checkOut={checkOut} 
+              selectedDates={selectedDates}
               balance={balance}
+              balances={balances}
+              propertyID={property._id}
               propertyName={property.nickname} 
+              propertyTitle={property.title}
               propertyPicture={property.pictures[0].original} 
               showPopUp={()=>setScroll(false)}
-              />
+            />
           </div>
         </div>
       ) : (

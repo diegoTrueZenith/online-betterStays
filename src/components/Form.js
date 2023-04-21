@@ -69,20 +69,22 @@ function Form(props) {
             <input className="form-inputs" type={"tel"} placeholder="Phone Number"    onChange={checkPhone}/>
             <input className="form-inputs" type={"email"} placeholder="Email Address" onChange={checkEmail} />
         </div>
-        <div className="bookingConfirmation">
+        {/* <div className="bookingConfirmation">
             <h2> Confirm your information: </h2>
             <p><b> Check-in:  </b> {formatDate(props.checkIn)}</p>
             <p><b> Check-Out: </b> {formatDate(props.checkOut)}</p>
             <p><b> Full Name: </b> {name} {lastName} </p>
             <p><b> Phone:     </b> {phone} </p>
             <p><b> Email:     </b> {email} </p>
-        </div>
+        </div> */}
         <div style={{display: showBtnContinue ? "block" : "none"}}>
           <button className="btnForm" onClick={()=>setShowPopup(true)}> Continue </button>
         </div>
         <div className="popup-booking" style={{display : showPopup ? "grid" : "none"}}>
             <Booking 
+              propertyID={props.propertyID}
               propertyName={props.propertyName} 
+              propertyTitle={props.propertyTitle}
               propertyPicture={props.propertyPicture} 
               name={name} 
               lastName={lastName} 
@@ -91,6 +93,8 @@ function Form(props) {
               checkIn={props.checkIn} 
               checkOut={props.checkOut} 
               balance={props.balance}
+              balances={props.balances}
+              selectedDates={props.selectedDates}
               closePopUp={()=>setShowPopup(false)}
             />
           </div>
