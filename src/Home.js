@@ -30,12 +30,14 @@ function Home() {
     }
   },[showBooking])
 
-  useEffect(()=> {
-    getData().then((result) => {
-      setMyListings(result.data.results);
-      console.log(myListings);
-    });
-  })
+
+useEffect(()=> {
+    fetch('https://api-token-diegotruezenith.vercel.app/api/guestyProperties')
+    .then(response => response.json())
+    .then(response => setMyListings(response.response.results))
+    // console.log(myListings);
+  }, [])
+
 
 
   return (

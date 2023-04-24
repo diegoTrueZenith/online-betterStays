@@ -3,8 +3,11 @@
 let data;
 async function fetchData() {
   try {
-    const response = await fetch('http://localhost:3000/api/guestyProperties');
-    data = await response.json();
+    fetch('https://api-token-diegotruezenith.vercel.app/api/guestyProperties')
+    .then(response => response.json())
+    .then(response => console.log(response.response.results))
+    .then(response => data = response.response.results);
+
   } catch (error) {
     console.error(error);
   }
@@ -24,7 +27,7 @@ export async function getData() {
 let calendar;
 async function fetchCalendar(id) {
   try {
-    const response = await fetch('http://localhost:3000/api/guestyCalendar',{
+    const response = await fetch('https://api-token-diegotruezenith.vercel.app/api/guestyCalendar',{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

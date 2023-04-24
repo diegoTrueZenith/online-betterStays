@@ -54,28 +54,44 @@ function Property(props) {
 
 
   // CALLING THE API TO FETCH THE PROPERTY DATA
-  let selectedProperty;
-  async function fetchData() {
-    try {
-      await fetch('http://localhost:3000/api/guestyProperties')
+  // let selectedProperty;
+  // async function fetchData() {
+  //   try {
+  //     await fetch('https://api-token-diegotruezenith.vercel.app/api/guestyProperties')
+  //     .then(response => response.json())
+  //     .then(data => selectedProperty = data);
+  //     let property = selectedProperty.data.results[selectedID]
+  //     setProperty(selectedProperty.data.results[selectedID]);
+  //     setPictures(property.pictures);
+  //     setAmenities(property.amenities);
+  //     setPropertyID(property._id);
+  //     fetchCalendar(property._id);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } 
+  // }
+
+
+  async function fetchData(){
+
+      let myProperty;
+      await fetch('https://api-token-diegotruezenith.vercel.app/api/guestyProperties')
       .then(response => response.json())
-      .then(data => selectedProperty = data);
-      let property = selectedProperty.data.results[selectedID]
-      setProperty(selectedProperty.data.results[selectedID]);
-      setPictures(property.pictures);
-      setAmenities(property.amenities);
-      setPropertyID(property._id);
-      fetchCalendar(property._id);
-    } catch (error) {
-      console.error(error);
-    } 
+      .then(response => myProperty = response.response.results[selectedID])
+      .then(response => setProperty(response.response.results[selectedID]))
+    
+      console.log(myProperty.pictures);
+      // setPictures(myProperty.pictures);
+      // setAmenities(property.amenities);
+      // setPropertyID(property._id);
+      // fetchCalendar(property._id);
   }
 
   // CALLING THE API TO FETCH THE DATES
   let calendar;
   async function fetchCalendar(id) {
     try {
-      const response = await fetch('http://localhost:3000/api/guestyCalendar',{
+      const response = await fetch('https://api-token-diegotruezenith.vercel.app/api/guestyCalendar',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -105,7 +121,7 @@ function Property(props) {
     let dates;
     let balances = [];
     try {
-      const response = await fetch('http://localhost:3000/api/guestyCalendar',{
+      const response = await fetch('https://api-token-diegotruezenith.vercel.app/api/guestyCalendar',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

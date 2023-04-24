@@ -36,7 +36,8 @@ function Booking(props) {
         checkOut: props.checkOut.split('/').join('-')
       })
     };
-    const response = await fetch('http://localhost:3000/api/guestyNewReservation', requestOptions);
+    // const response = await fetch('http://localhost:3000/api/guestyNewReservation', requestOptions);
+    const response = await fetch('https://api-token-diegotruezenith.vercel.app/api/guestyNewReservation', requestOptions);
     const result = await response.json();
     console.log(result);
   }
